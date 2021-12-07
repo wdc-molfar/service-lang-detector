@@ -1,0 +1,25 @@
+{
+  "name": "@molfar/service-lang-detector",
+  "version": "1.0.0",
+  "description": "Language Detector Molfar Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wdc-molfar/service-lang-detector.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wdc-molfar/service-lang-detector/issues"
+  },
+  "homepage": "https://github.com/wdc-molfar/service-lang-detector#readme",
+  "dependencies": {
+    "@molfar/amqp-client": "github:wdc-molfar/amqp-client",
+    "@molfar/csc": "github:wdc-molfar/csc",
+    "languagedetect": "^2.0.0",
+    "lodash": "^4.17.21"
+  }
+}
