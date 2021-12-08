@@ -29,27 +29,19 @@ const run = async () => {
 	const container = new Container()
 
 	container.hold(workerPath, "--worker 1--")
-	// container.hold(workerPath, "--worker 2--")
 	
 	const worker1 = await container.startInstance(container.getService(s => s.name == "--worker 1--"))
-	let res = await worker1.execute("configure", workerConfig)
+	let res = await worker1.configure(workerConfig)
 	console.log(res)
 	
-	// const worker2 = await container.startInstance(container.getService(s => s.name == "--worker 2--"))
-	// res = await worker2.execute("configure", workerConfig)
-	// console.log(res)
-
-
-	res = await worker1.execute("start")
+	
+	res = await worker1.start()
 	console.log(res)
 
-	// res = await worker2.execute("start")
-	// console.log(res)
-
+	
 	await delay(10000)
 
-	res = await worker1.execute("stop")
-	// res = await worker2.execute("stop")
+	res = await worker1.stop()
 	
 	container.terminateAll()
 	
