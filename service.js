@@ -1,10 +1,17 @@
 const { ServiceWrapper } = require("@molfar/csc")
 const { AmqpManager, Middlewares } = require("@molfar/amqp-client")
-const { extend } = require("lodash")
+const { extend, find } = require("lodash")
 const LanguageDetect = require('languagedetect')
 const lngDetector = new LanguageDetect()
+const langs = require("langs").all()
 
-let counter = 0
+const name2locale = name => {
+    if( !name ) return null
+    let res = find(langs, l => l.name.toLowerCase() == name.toLowerCase())
+    if( !res ) return null
+    return res["1"]    
+}
+
 
 let service = new ServiceWrapper({
     consumer: null,
@@ -26,14 +33,17 @@ let service = new ServiceWrapper({
 
             async (err, msg, next) => {
                 let m = msg.content
+                let languages = lngDetector.detect(m.metadata.text, 3)
                 m.metadata = extend({}, m.metadata, {
                     nlp: {
-                        language: lngDetector.detect(m.metadata.text, 3)
+                        language: {
+                            locale: (languages[0]) ? name2locale(languages[0][0]) : null,
+                            scores: languages
+                        }    
                     }
                 })
                 this.publisher.send(m)
-                console.log("Detect > ",counter)
-                counter++
+                console.log("Detect > ", m.metadata.nlp)
                 msg.ack()
             }
 

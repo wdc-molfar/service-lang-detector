@@ -19,6 +19,7 @@
   "dependencies": {
     "@molfar/amqp-client": "github:wdc-molfar/amqp-client",
     "@molfar/csc": "github:wdc-molfar/csc",
+    "langs": "^2.0.0",
     "languagedetect": "^2.0.0",
     "lodash": "^4.17.21"
   }
