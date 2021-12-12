@@ -43,7 +43,7 @@ let service = new ServiceWrapper({
                     }
                 })
                 this.publisher.send(m)
-                console.log("Detect > ", m.metadata.nlp)
+                console.log(`${ this.config._instance_name || this.config._instance_id} > detect locale ` , m.md5, m.metadata.nlp.language.locale)
                 msg.ack()
             }
 
