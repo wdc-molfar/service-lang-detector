@@ -2,7 +2,7 @@
   "name": "@molfar/service-lang-detector",
   "version": "1.0.0",
   "description": "Language Detector Molfar Service",
-  "main": "index.js",
+  "main": "service.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
