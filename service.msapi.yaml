@@ -8,57 +8,106 @@ components:
 
     schemas:
         
-        MESSAGE:
+        INPUT:
             type: object
             required:
-                - type
-                - url
+                - scraper
             properties:
-                type:
-                    type: string
-                url:
-                    type: string
-                    format: uri-reference
-                metadata:
+                scraper:
                     type: object
-                createdAt:
-                    type: string
-                md5:
-                    type: string
+                    required:
+                        - message
+                    properties:
+                        message:
+                            type: object
+                            required:
+                                - text
+                            properties: 
+                                text:
+                                    type: string
+                            additionalProperties: true                
+                    additionalProperties: true
+            additionalProperties: true                
+
+
+        OUTPUT:
+            type: object
+            required:
+                - scraper
+                - langDetector
+            properties:
+
+                scraper:
+                    type: object
+                    required:
+                        - message
+                    properties:
+                        message:
+                            type: object
+                            required:
+                                - text
+                            properties: 
+                                text:
+                                    type: string
+                            additionalProperties: true                
+                    additionalProperties: true
+                
+                langDetector:
+                    type: object
+                    required:
+                        - language
+                    properties:
+                        language:
+                            type: object
+                            required:
+                                - locale
+                                - scores
+                            properties:
+                                locale:
+                                    type: string
+                                scores:
+                                    type: array                                                    
+                            additionalProperties: true
+                    additionalProperties: true
+            additionalProperties: true                        
+
 
 service:
 
-    config: 
-        amqp:
-            url:
-                type: string
-                format: uri-reference
-
     consume:
         amqp: 
-            $ref: "#/service/config/amqp"
+            url: "amqps://xoilebqg:Nx46t4t9cxQ2M0rF2rIyZPS_xbAhmJIG@hornet.rmq.cloudamqp.com/xoilebqg"
+        
         queue:
-            name: scraped_messages
+            name: scraper
             exchange:
-                name: scraped_messages
+                name: scraper
                 mode: fanout
                 options:
                     durable: true
                     persistent: true
             options:
                 noAck: false 
-                exclusive: false   
+                exclusive: false        
+       
         message:
-            $ref: "#/components/schemas/MESSAGE"
+            $ref: "#/components/schemas/INPUT"
             
+
+    # The lang-detector will send a message to
     produce:
-        amqp: 
-            $ref: "#/service/config/amqp"
+        
+        amqp:
+            url: "amqps://xoilebqg:Nx46t4t9cxQ2M0rF2rIyZPS_xbAhmJIG@hornet.rmq.cloudamqp.com/xoilebqg"
+        
         exchange:
-            name: "processed_messages"
+            name: "lang-detector"
             mode: fanout
             options:
                 durable: true
                 persistent: true
+        
+        # Schema of generated messages
         message:
-            $ref: "#/components/schemas/MESSAGE"
+            $ref: "#/components/schemas/OUTPUT"
+

@@ -1,5 +1,4 @@
-const { ServiceWrapper } = require("@molfar/csc")
-const { AmqpManager, Middlewares } = require("@molfar/amqp-client")
+const { ServiceWrapper, AmqpManager, Middlewares } = require("@molfar/service-chassis")
 const { extend, find } = require("lodash")
 const LanguageDetect = require('languagedetect')
 const lngDetector = new LanguageDetect()
@@ -21,8 +20,6 @@ let service = new ServiceWrapper({
     async onConfigure(config, resolve) {
         this.config = config
 
-        console.log(`configure ${ this.config._instance_name || this.config._instance_id}`)
-
         this.consumer = await AmqpManager.createConsumer(this.config.service.consume)
 
         await this.consumer.use([
@@ -32,18 +29,24 @@ let service = new ServiceWrapper({
             Middlewares.Error.BreakChain,
 
             async (err, msg, next) => {
+                
                 let m = msg.content
-                let languages = lngDetector.detect(m.metadata.text, 3)
-                m.metadata = extend({}, m.metadata, {
-                    nlp: {
+
+                let languages = lngDetector.detect(m.scraper.message.text, 3)
+                
+                m = extend({}, m, {
+                    langDetector: {
                         language: {
                             locale: (languages[0]) ? name2locale(languages[0][0]) : null,
                             scores: languages
                         }    
                     }
                 })
+                
+                console.log(m)
+
                 this.publisher.send(m)
-                console.log(`${ this.config._instance_name || this.config._instance_id} > detect locale ` , m.md5, m.metadata.nlp.language.locale)
+               
                 msg.ack()
             }
 
@@ -65,13 +68,11 @@ let service = new ServiceWrapper({
     },
 
     onStart(data, resolve) {
-        console.log(`start ${ this.config._instance_name || this.config._instance_id}`)
         this.consumer.start()
         resolve({ status: "started" })
     },
 
     async onStop(data, resolve) {
-        console.log(`stop ${ this.config._instance_name || this.config._instance_id}`)
         await this.consumer.close()
         await this.publisher.close()
         resolve({ status: "stoped" })
