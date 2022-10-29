@@ -101,7 +101,7 @@ service:
             url: "amqps://xoilebqg:Nx46t4t9cxQ2M0rF2rIyZPS_xbAhmJIG@hornet.rmq.cloudamqp.com/xoilebqg"
         
         exchange:
-            name: "lang-detector"
+            name: lang-detector
             mode: fanout
             options:
                 durable: true
