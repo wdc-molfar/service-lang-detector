@@ -76,7 +76,7 @@ service:
 
     consume:
         amqp: 
-            url: "amqps://xoilebqg:Nx46t4t9cxQ2M0rF2rIyZPS_xbAhmJIG@hornet.rmq.cloudamqp.com/xoilebqg"
+            url: "amqps://jixxkoct:pFgVpsB--OFx4TjtTAILd5OWLbu_YI3j@toad.rmq.cloudamqp.com/jixxkoct"
         
         queue:
             name: scraper
@@ -98,7 +98,7 @@ service:
     produce:
         
         amqp:
-            url: "amqps://xoilebqg:Nx46t4t9cxQ2M0rF2rIyZPS_xbAhmJIG@hornet.rmq.cloudamqp.com/xoilebqg"
+            url: "amqps://jixxkoct:pFgVpsB--OFx4TjtTAILd5OWLbu_YI3j@toad.rmq.cloudamqp.com/jixxkoct"
         
         exchange:
             name: lang-detector
